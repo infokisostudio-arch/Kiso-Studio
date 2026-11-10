@@ -1,0 +1,2399 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <!-- ============================== SEO ============================== -->
+  <title>Kiso Studio | Menù digitali per ristoranti, bar e pub a Lecco</title>
+  <meta name="description" content="Kiso Studio crea menù digitali per ristoranti, bar e pub di Lecco e provincia. Aggiorni prezzi e piatti dal telefono con un foglio Google, senza abbonamenti.">
+  <meta name="theme-color" content="#0A0B0E">
+  <meta name="color-scheme" content="dark">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="it_IT">
+  <meta property="og:site_name" content="Kiso Studio">
+  <meta property="og:title" content="Kiso Studio | Menù digitali per ristoranti, bar e pub a Lecco">
+  <meta property="og:description" content="Il menù del tuo locale, sempre aggiornato. Menù digitali di nuova generazione per ristoranti, bar e pub di Lecco e provincia.">
+  <!-- DA COMPLETARE quando il sito sarà online (servono URL assoluti):
+  <meta property="og:url" content="https://www.tuodominio.it/">
+  <meta property="og:image" content="https://www.tuodominio.it/anteprima.jpg">
+  <link rel="canonical" href="https://www.tuodominio.it/">
+  -->
+
+  <!-- Favicon vuoto per evitare richieste inutili (da sostituire con quello definitivo) -->
+  <link rel="icon" href="data:,">
+
+  <!-- Font: Outfit (geometrico, vicino al carattere del logo). Solo i pesi che servono. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&display=swap">
+
+  <!-- Segnala subito al CSS che JavaScript è attivo: senza JS i contenuti restano visibili -->
+  <script>document.documentElement.classList.add('js');</script>
+
+  <style>
+    /* ==================================================================
+       1. VARIABILI E BASE
+       ================================================================== */
+    :root {
+      /* Palette */
+      --bg: #0A0B0E;          /* nero profondo */
+      --text: #F5F5F7;        /* bianco */
+      --muted: #B8BCC4;       /* argento: testi secondari */
+      --amber: #D9A441;       /* accento: SOLO demo e menù di esempio */
+      --ivory: #F4F2EE;       /* sfondo dell'unica sezione chiara (demo) */
+      --line: rgba(184, 188, 196, .16);        /* bordo sottile */
+      --line-strong: rgba(184, 188, 196, .42); /* bordo sottile in evidenza */
+
+      /* Misure */
+      --header-h: 64px;
+      --pad: clamp(20px, 5vw, 48px);
+      --maxw: 1160px;
+
+      --font: "Outfit", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+      /* Lo scroll verso le ancore non finisce sotto la barra in alto */
+      scroll-padding-top: calc(var(--header-h) + 16px);
+    }
+
+    /* Scorrimento morbido solo se la persona non ha chiesto meno movimento */
+    @media (prefers-reduced-motion: no-preference) {
+      html { scroll-behavior: smooth; }
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 1rem;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, p, ul, ol { margin: 0; }
+    ul, ol { padding: 0; list-style: none; }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; }
+
+    /* Gli elementi con attributo hidden restano nascosti anche se hanno un display proprio */
+    [hidden] { display: none !important; }
+
+    /* Testo solo per screen reader */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .container {
+      width: 100%;
+      max-width: var(--maxw);
+      margin-inline: auto;
+      padding-inline: var(--pad);
+    }
+
+    /* Focus ben visibile per chi naviga da tastiera */
+    :focus-visible {
+      outline: 2px solid var(--text);
+      outline-offset: 3px;
+    }
+
+    /* Link "Vai ai contenuti": appare solo con la tastiera */
+    .skip-link {
+      position: absolute;
+      left: 16px;
+      top: -64px;
+      z-index: 100;
+      padding: 10px 16px;
+      border-radius: 8px;
+      background: var(--text);
+      color: var(--bg);
+      font-weight: 600;
+      text-decoration: none;
+      transition: top .2s ease;
+    }
+    .skip-link:focus { top: 12px; }
+
+    /* ==================================================================
+       2. PULSANTI
+       ================================================================== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;               /* area di tocco comoda da telefono */
+      padding: 0 20px;
+      text-align: center;
+      white-space: nowrap;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      font: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: .005em;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+    }
+    .btn-primary { background: var(--text); color: var(--bg); }
+    .btn-primary:hover { background: #fff; }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border-color: var(--line-strong);
+    }
+    .btn-ghost:hover { border-color: var(--text); background: rgba(245, 245, 247, .06); }
+
+    .btn-sm { min-height: 42px; padding: 0 20px; font-size: .9375rem; }
+
+    /* ==================================================================
+       3. BARRA IN ALTO (sempre visibile)
+       ================================================================== */
+    .site-header {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 50;
+      height: var(--header-h);
+      background: rgba(10, 11, 14, .92);
+      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line);
+    }
+    .header-inner {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    /* Il logo è usato così com'è: l'immagine NON è modificata.
+       Il file originale ha ampi margini scuri, quindi la finestra qui sotto
+       ne mostra solo la parte centrale (ritaglio solo visivo, via CSS)
+       e sfuma i bordi per fonderli con lo sfondo della barra. */
+    .brand {
+      display: block;
+      flex: none;
+      line-height: 0;
+    }
+    .brand-crop {
+      position: relative;
+      display: block;
+      height: 44px;
+      aspect-ratio: 1800 / 560;
+      overflow: hidden;
+      -webkit-mask-image:
+        linear-gradient(to right, transparent, #000 9%, #000 91%, transparent),
+        linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
+      -webkit-mask-composite: source-in;
+      mask-image:
+        linear-gradient(to right, transparent, #000 9%, #000 91%, transparent),
+        linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
+      mask-composite: intersect;
+    }
+    .brand-crop img {
+      position: absolute;
+      max-width: none;
+      height: auto;
+      /* Finestra di ritaglio: x 400-2200, y 440-1000 su 2576 × 1438 px */
+      width: 143.11%;
+      left: -22.22%;
+      top: -78.57%;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    /* ==================================================================
+       4. HERO
+       ================================================================== */
+    .hero {
+      position: relative;
+      /* spazio per la barra fissa + respiro */
+      padding-block: calc(var(--header-h) + clamp(40px, 8vw, 72px)) clamp(64px, 10vw, 112px);
+      overflow: hidden;
+    }
+
+    /* Mobile-first: una colonna, prima il testo e sotto il telefono */
+    .hero-grid {
+      display: grid;
+      gap: clamp(48px, 9vw, 72px);
+      align-items: center;
+    }
+
+    .hero-title {
+      font-size: clamp(2.5rem, 10.5vw, 5rem);
+      font-weight: 600;
+      line-height: 1.04;
+      letter-spacing: -.035em;
+      text-wrap: balance;
+    }
+
+    .hero-sub {
+      margin-top: clamp(20px, 3vw, 28px);
+      max-width: 34ch;
+      color: var(--muted);
+      font-size: clamp(1.0625rem, 2.6vw, 1.3125rem);
+      line-height: 1.5;
+      text-wrap: pretty;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: clamp(28px, 5vw, 40px);
+    }
+    /* Su telefono i due pulsanti occupano la riga, comodi da toccare */
+    .hero-actions .btn { flex: 1 1 150px; }
+
+    /* Contenitore del pulsante "Guarda la demo": ancora le frecce a gessetto */
+    .cta-demo { position: relative; display: flex; flex: 1 1 150px; }
+    .cta-demo .btn { flex: 1; }
+    /* Spazio sotto i pulsanti per le frecce, prima del telefono */
+    .hero-actions { margin-bottom: 56px; }
+
+    .chalk-arrows {
+      position: absolute;
+      top: calc(100% - 18px);   /* le punte arrivano appena sotto il pulsante */
+      left: 0;
+      width: 250px;
+      height: auto;
+      overflow: visible;
+      pointer-events: none;
+      animation: chalkNudge 3.2s ease-in-out 4.2s infinite;
+    }
+    /* Tratto disegnato a mano: le linee compaiono una dopo l'altra */
+    .chalk-line {
+      stroke-dasharray: 1 1;
+      stroke-dashoffset: 1;
+      animation: chalkDraw .7s cubic-bezier(.4, .1, .3, 1) calc(1s + var(--i) * .45s) forwards;
+    }
+    @keyframes chalkDraw { to { stroke-dashoffset: 0; } }
+    /* Piccolo dondolio, per richiamare l'attenzione senza disturbare */
+    @keyframes chalkNudge {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-5px); }
+    }
+    @media (max-width: 349px) { .chalk-arrows { display: none; } }
+
+    /* ---------- Mockup smartphone ---------- */
+    .hero-visual {
+      position: relative;
+      display: flex;
+      justify-content: center;
+    }
+    /* Alone argento molto tenue dietro al telefono */
+    .hero-visual::before {
+      content: "";
+      position: absolute;
+      inset: -12% -10%;
+      background: radial-gradient(closest-side, rgba(184, 188, 196, .13), transparent 72%);
+      pointer-events: none;
+    }
+
+    .phone {
+      position: relative;
+      width: clamp(250px, 72vw, 310px);
+      aspect-ratio: 9 / 18.6;
+      padding: 9px;
+      border-radius: 46px;
+      background: linear-gradient(160deg, #1c1e24, #0d0e11);
+      border: 1px solid rgba(184, 188, 196, .45);
+      box-shadow:
+        0 50px 90px -30px rgba(0, 0, 0, .9),
+        inset 0 0 0 1px rgba(255, 255, 255, .05);
+    }
+    /* Tasti laterali */
+    .phone::before, .phone::after {
+      content: "";
+      position: absolute;
+      width: 3px;
+      border-radius: 2px;
+      background: rgba(184, 188, 196, .4);
+    }
+    .phone::before { left: -4px; top: 18%; height: 8%; }
+    .phone::after  { right: -4px; top: 24%; height: 13%; }
+
+    .phone-screen {
+      position: relative;
+      height: 100%;
+      overflow: hidden;
+      border-radius: 37px;
+      background: #050608;
+    }
+    /* Dissolvenza in fondo allo schermo: il menù "continua" */
+    .phone-screen::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 26%;
+      background: linear-gradient(to bottom, transparent, #050608 82%);
+      pointer-events: none;
+    }
+    .phone-island {
+      position: absolute;
+      top: 11px;
+      left: 50%;
+      width: 28%;
+      height: 22px;
+      transform: translateX(-50%);
+      border-radius: 999px;
+      background: #000;
+      z-index: 2;
+    }
+
+    /* Menù di esempio: ambra su nero */
+    .menu { padding: 56px 18px 0; }
+
+    .menu-venue {
+      font-size: 1.125rem;
+      font-weight: 600;
+      letter-spacing: -.01em;
+      color: var(--text);
+    }
+    .menu-place {
+      margin-top: 2px;
+      font-size: .75rem;
+      color: var(--muted);
+    }
+
+    .menu-cat {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 20px;
+      font-size: .8125rem;
+      font-weight: 600;
+      color: var(--amber);
+    }
+    .menu-cat::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: rgba(217, 164, 65, .35);
+    }
+
+    .menu-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-inline: -8px;
+      padding: 9px 8px;
+      border-radius: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, .06);
+    }
+    .menu-item { font-size: .8125rem; font-weight: 500; color: var(--text); }
+    .menu-desc { display: block; margin-top: 1px; font-size: .6875rem; font-weight: 400; color: var(--muted); }
+    .menu-price {
+      flex: none;
+      display: inline-block;
+      font-size: .8125rem;
+      font-weight: 600;
+      color: var(--amber);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+      transition: opacity .28s ease, transform .28s ease;
+    }
+
+    /* Evidenziazione quando un prezzo cambia */
+    .menu-row.is-flash { animation: rowFlash 2.4s ease-out; }
+    @keyframes rowFlash {
+      0%   { background: rgba(217, 164, 65, 0); }
+      14%  { background: rgba(217, 164, 65, .24); }
+      100% { background: rgba(217, 164, 65, 0); }
+    }
+    .menu-price.is-out { opacity: 0; transform: translateY(-8px); }
+    .menu-price.is-in  { animation: priceIn .42s cubic-bezier(.2, .8, .2, 1); }
+    @keyframes priceIn {
+      from { opacity: 0; transform: translateY(8px) scale(.96); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    /* Etichetta che racconta la modifica: "Birra media 5,00 € → 5,50 €" */
+    .change-chip {
+      position: absolute;
+      left: 50%;
+      bottom: 22px;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: max-content;
+      max-width: calc(100% - 24px);
+      padding: 9px 14px;
+      border: 1px solid rgba(217, 164, 65, .5);
+      border-radius: 999px;
+      background: rgba(18, 19, 23, .96);
+      font-size: .75rem;
+      font-weight: 500;
+      white-space: nowrap;
+      opacity: 0;
+      transform: translate(-50%, 10px);
+      transition: opacity .35s ease, transform .35s ease;
+    }
+    .change-chip.is-visible { opacity: 1; transform: translate(-50%, 0); }
+    .chip-old { color: var(--muted); text-decoration: line-through; }
+    .chip-arrow { color: var(--muted); }
+    .chip-new { color: var(--amber); font-weight: 600; }
+
+    /* Con "riduci movimento": niente loop, mostriamo lo stato già aggiornato */
+    .hero-visual.is-static .change-chip { opacity: 1; transform: translate(-50%, 0); transition: none; }
+    .hero-visual.is-static .menu-row.is-updated { background: rgba(217, 164, 65, .16); }
+
+    /* Desktop: testo a sinistra, telefono a destra */
+    @media (min-width: 900px) {
+      :root { --header-h: 76px; }
+      .brand-crop { height: 52px; }
+      .hero-grid { grid-template-columns: 1.2fr .8fr; gap: 56px; }
+      .hero-actions .btn { flex: 0 0 auto; padding-inline: 28px; }
+      .cta-demo { flex: 0 0 auto; }
+      .cta-demo .btn { flex: 0 0 auto; }
+      .hero-actions { margin-bottom: 0; }
+      .hero-visual { justify-content: flex-end; padding-right: clamp(0px, 3vw, 40px); }
+    }
+
+    /* ==================================================================
+       4b. SEZIONE 2: CHI SIAMO
+       ================================================================== */
+    .about { padding-block: 0 clamp(72px, 11vw, 128px); }
+
+    /* Filo sottile che stacca la sezione dalla hero */
+    .about-inner {
+      display: grid;
+      gap: clamp(24px, 5vw, 40px);
+      padding-top: clamp(40px, 7vw, 72px);
+      border-top: 1px solid var(--line);
+    }
+
+    .about-title {
+      font-size: clamp(2rem, 6.4vw, 3.5rem);
+      font-weight: 600;
+      line-height: 1.08;
+      letter-spacing: -.03em;
+      text-wrap: balance;
+    }
+
+    .about-text {
+      max-width: 38ch;
+      color: var(--muted);
+      font-size: clamp(1.0625rem, 2.4vw, 1.25rem);
+      line-height: 1.6;
+      text-wrap: pretty;
+    }
+
+    /* Badge "Lecco e provincia", inserito nella frase */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 1px 13px 1px 10px;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      background: rgba(245, 245, 247, .05);
+      color: var(--text);
+      font-size: .88em;
+      font-weight: 500;
+      line-height: 1.6;
+      white-space: nowrap;
+      vertical-align: 1px;
+    }
+    .badge svg { flex: none; width: .95em; height: .95em; }
+
+    @media (min-width: 900px) {
+      .about-inner { grid-template-columns: 1.1fr .9fr; gap: 56px; align-items: start; }
+      /* Il testo si allinea alla prima riga del titolo */
+      .about-text { padding-top: .6em; }
+    }
+
+    /* ==================================================================
+       4c. SEZIONE 3: COME FUNZIONA
+       ================================================================== */
+    .steps-section { padding-block: 0 clamp(72px, 11vw, 128px); }
+
+    .steps-title {
+      font-size: clamp(2rem, 6.4vw, 3.5rem);
+      font-weight: 600;
+      line-height: 1.08;
+      letter-spacing: -.03em;
+    }
+
+    /* Mobile-first: schede in colonna */
+    .steps {
+      display: grid;
+      gap: 16px;
+      margin-top: clamp(32px, 6vw, 56px);
+    }
+
+    .step {
+      display: flex;
+      flex-direction: column;
+      padding: clamp(24px, 3.2vw, 36px);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(245, 245, 247, .02);
+    }
+
+    .step-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    /* Numero grande: i passi sono davvero in sequenza */
+    .step-num {
+      font-size: clamp(3.5rem, 9vw, 5rem);
+      font-weight: 500;
+      line-height: .9;
+      letter-spacing: -.04em;
+      color: var(--muted);
+      opacity: .55;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Icona a linea sottile */
+    .step-icon {
+      flex: none;
+      width: 48px;
+      height: 48px;
+      color: var(--text);
+    }
+
+    .step-name {
+      font-size: clamp(1.25rem, 2.2vw, 1.4375rem);
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: -.015em;
+    }
+    .step-desc {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 1.0625rem;
+      line-height: 1.55;
+      text-wrap: pretty;
+    }
+
+    /* Desktop: tre passi in riga, che compaiono uno dopo l'altro */
+    @media (min-width: 900px) {
+      .steps { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+      .step:nth-child(2) { --d: .15s; }
+      .step:nth-child(3) { --d: .3s; }
+    }
+
+    /* ==================================================================
+       4d. SEZIONE 4: DEMO INTERATTIVA (l'unica sezione chiara)
+       ================================================================== */
+    .demo {
+      --ink: #0A0B0E;
+      --ink-muted: #4A4E57;
+      --cell-edit: #FBF4E4;           /* celle modificabili: velo ambra chiaro */
+      background: var(--ivory);
+      color: var(--ink);
+      color-scheme: light;            /* menù a tendina e campi chiari, anche se la pagina è scura */
+      padding-block: clamp(72px, 11vw, 128px);
+    }
+    /* Su sfondo avorio il focus è nero; dentro il telefono resta bianco */
+    .demo :focus-visible { outline-color: var(--ink); }
+    .demo .phone :focus-visible { outline-color: var(--text); outline-offset: -3px; }
+
+    .demo-title {
+      font-size: clamp(2rem, 6.4vw, 3.5rem);
+      font-weight: 600;
+      line-height: 1.08;
+      letter-spacing: -.03em;
+    }
+
+    /* Pulsanti guida */
+    .demo-actions {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px;
+      margin-top: clamp(28px, 5vw, 44px);
+    }
+    .demo-btn {
+      min-height: 50px;
+      padding: 0 22px;
+      border: 1px solid rgba(10, 11, 14, .3);
+      border-radius: 10px;
+      background: transparent;
+      color: var(--ink);
+      font: inherit;
+      font-size: .9375rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color .2s ease, color .2s ease, border-color .2s ease;
+    }
+    .demo-btn:hover { background: var(--ink); border-color: var(--ink); color: var(--ivory); }
+    .demo-btn:disabled { opacity: .45; cursor: progress; background: transparent; color: var(--ink); }
+
+    .demo-hint {
+      margin-top: 14px;
+      color: var(--ink-muted);
+      font-size: .9375rem;
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);   /* la tabella larga scorre nel suo riquadro, senza allargare la pagina */
+      gap: 36px;
+      align-items: start;
+    }
+    .demo-left { min-width: 0; }
+    .sheet-col { margin-top: clamp(28px, 5vw, 44px); }
+
+    .demo-note {
+      margin-top: clamp(28px, 5vw, 44px);
+      color: var(--ink-muted);
+      font-size: .875rem;
+      line-height: 1.5;
+    }
+
+    /* ---------- Foglio stile Google Sheets (finto) ---------- */
+    .sheet {
+      overflow: hidden;
+      border: 1px solid rgba(10, 11, 14, .14);
+      border-radius: 14px;
+      background: #fff;
+      box-shadow: 0 28px 50px -34px rgba(10, 11, 14, .35);
+    }
+    .sheet-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-bottom: 1px solid #E3E5E8;
+    }
+    .sheet-bar svg { flex: none; width: 20px; height: 20px; }
+    .sheet-title { font-size: .9375rem; font-weight: 600; }
+
+    /* Barra della formula: mostra la cella selezionata */
+    .sheet-formula {
+      display: flex;
+      align-items: center;
+      min-height: 34px;
+      border-bottom: 1px solid #E3E5E8;
+      color: #5b6068;
+      font-size: .8125rem;
+    }
+    .fx-ref { width: 58px; padding: 0 12px; border-right: 1px solid #E3E5E8; font-weight: 500; }
+    .fx-sep { padding: 0 12px; font-style: italic; font-family: Georgia, "Times New Roman", serif; }
+    .fx-val { color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* Su telefono la tabella scorre di lato dentro il suo riquadro */
+    .sheet-scroll { overflow-x: auto; }
+
+    /* Larghezze colonne: strette su telefono, così il Prezzo si vede già senza scorrere */
+    .c-num { width: 28px; }
+    .c-cat { width: 92px; }
+    .c-price { width: 72px; }
+    .c-flag { width: 98px; }
+    .c-daily { width: 140px; }
+
+    .sheet-table {
+      width: 100%;
+      min-width: 574px;
+      table-layout: fixed;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: .875rem;
+    }
+    .sheet-table th, .sheet-table td {
+      height: 44px;
+      padding: 0 8px;
+      border-right: 1px solid #E3E5E8;
+      border-bottom: 1px solid #E3E5E8;
+      font-weight: 400;
+      text-align: left;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      /* quando una cella viene portata in vista non finisce sotto la barra */
+      scroll-margin: calc(var(--header-h) + 24px) 16px 24px 16px;
+    }
+    .sheet-table th:last-child, .sheet-table td:last-child { border-right: 0; }
+    .sheet-table tbody tr:last-child > * { border-bottom: 0; }
+
+    .sheet-table .letters th {
+      height: 26px;
+      background: #F3F4F6;
+      color: #5b6068;
+      font-size: .75rem;
+      font-weight: 500;
+      text-align: center;
+    }
+    .sheet-table thead tr:nth-child(2) th { height: 40px; background: #F8F9FA; font-size: .875rem; font-weight: 600; }
+    .sheet-table .rownum { padding: 0; background: #F3F4F6; color: #5b6068; font-size: .75rem; text-align: center; }
+    .sheet-table .cell-name { font-weight: 500; }
+    .sheet-table .col-price { text-align: right; }
+    .sheet-table .col-flag { text-align: left; }
+
+    /* Celle modificabili */
+    .sheet-table td.editable { padding: 0; background: var(--cell-edit); }
+    .sheet-table td.editable:focus-within,
+    .sheet-table td.is-active,
+    .sheet-table th.is-active {
+      outline: 2px solid var(--ink);
+      outline-offset: -2px;
+      background: #fff;
+    }
+    .sheet-table td.is-hit { animation: cellHit 1.4s ease-out; }
+
+    /* Articolo aggiunto o tolto */
+    .sheet-table tr.is-adding > * { animation: rowAppear .5s ease-out; }
+    @keyframes rowAppear { from { opacity: 0; } to { opacity: 1; } }
+    .sheet-table tr.is-removing > * { opacity: 0; transition: opacity .45s ease; }
+    .menu-row.is-removing { opacity: 0; transition: opacity .45s ease; }
+    .menu-cat.is-appearing { animation: featIn .55s cubic-bezier(.2, .8, .2, 1); }
+    @keyframes cellHit {
+      0%   { background: rgba(217, 164, 65, .6); }
+      100% { background: var(--cell-edit); }
+    }
+
+    .cell-input, .cell-select {
+      display: block;
+      width: 100%;
+      height: 43px;
+      margin: 0;
+      padding: 0 10px;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      font-size: 1rem;            /* 16px: evita lo zoom automatico di iOS */
+      outline: none;
+    }
+    .cell-input { text-align: right; font-variant-numeric: tabular-nums; }
+    .cell-select {
+      -webkit-appearance: none;
+      appearance: none;
+      padding-right: 28px;
+      cursor: pointer;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%235b6068' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 10px center / 10px 6px;
+    }
+    .cell-select.is-no { color: #9A3412; font-weight: 600; }   /* esaurito */
+    .cell-select.is-yes { font-weight: 600; }                  /* piatto del giorno */
+
+    .sheet-tabs {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 12px;
+      border-top: 1px solid #E3E5E8;
+      background: #F3F4F6;
+      font-size: .8125rem;
+    }
+    .sheet-tab { padding: 4px 14px; border-radius: 6px; background: #fff; font-weight: 600; }
+    .sheet-hint { color: #5b6068; }
+
+    /* ---------- Telefono della demo ---------- */
+    .phone-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    .phone--demo {
+      width: clamp(264px, 78vw, 320px);
+      aspect-ratio: 9 / 19.2;
+      box-shadow:
+        0 40px 70px -34px rgba(10, 11, 14, .6),
+        inset 0 0 0 1px rgba(255, 255, 255, .05);
+    }
+    .phone--demo .phone-screen::after { display: none; }
+
+    /* Il menù scorre dentro lo schermo, senza barra visibile */
+    .demo-menu {
+      position: absolute;
+      inset: 0;
+      overflow-y: auto;
+      padding-bottom: 32px;
+      scrollbar-width: none;
+    }
+    .demo-menu::-webkit-scrollbar { display: none; }
+    .menu-info { min-width: 0; }
+
+    /* Piatto esaurito: barrato e attenuato */
+    .menu-row.is-soldout .menu-item { color: var(--muted); text-decoration: line-through; opacity: .7; }
+    .menu-row.is-soldout .menu-price { color: rgba(217, 164, 65, .45); text-decoration: line-through; }
+
+    /* Piatto del giorno in evidenza */
+    .feat-wrap { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+    .feat {
+      padding: 12px 14px;
+      border: 1px solid rgba(217, 164, 65, .55);
+      border-radius: 12px;
+      background: rgba(217, 164, 65, .09);
+    }
+    .feat.is-new { animation: featIn .55s cubic-bezier(.2, .8, .2, 1); }
+    @keyframes featIn {
+      from { opacity: 0; transform: translateY(-8px) scale(.98); }
+      to   { opacity: 1; transform: none; }
+    }
+    .feat-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--amber);
+      font-size: .75rem;
+      font-weight: 600;
+    }
+    .feat-label svg { width: 12px; height: 12px; }
+    .feat-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-top: 6px; }
+    .feat-name { color: var(--text); font-size: .9375rem; font-weight: 600; line-height: 1.25; }
+    .feat-desc { margin-top: 2px; color: var(--muted); font-size: .6875rem; }
+
+    .demo-back {
+      padding: 10px 4px;
+      border: 0;
+      background: none;
+      color: var(--ink);
+      font: inherit;
+      font-size: .9375rem;
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      cursor: pointer;
+    }
+
+    /* Su telefono: pillola per tornare a vedere il menù dopo una modifica a mano */
+    .demo-peek {
+      position: fixed;
+      left: 50%;
+      bottom: max(18px, env(safe-area-inset-bottom));
+      z-index: 45;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 46px;
+      padding: 0 20px;
+      border: 1px solid rgba(217, 164, 65, .65);
+      border-radius: 999px;
+      background: #0A0B0E;
+      color: var(--text);
+      font: inherit;
+      font-size: .9375rem;
+      font-weight: 500;
+      cursor: pointer;
+      transform: translateX(-50%);
+      box-shadow: 0 14px 30px -10px rgba(0, 0, 0, .55);
+      animation: peekIn .3s ease;
+    }
+    .demo-peek::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--amber); }
+    .demo .demo-peek:focus-visible { outline: 0; box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--ink); }
+    @keyframes peekIn {
+      from { opacity: 0; transform: translate(-50%, 10px); }
+      to   { opacity: 1; transform: translate(-50%, 0); }
+    }
+
+    @media (min-width: 600px) {
+      .demo-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (min-width: 900px) {
+      /* Il telefono è centrato in verticale rispetto a tutta la colonna di sinistra (stessa dimensione di prima) */
+      .demo-grid { grid-template-columns: minmax(0, 1.35fr) minmax(0, .65fr); gap: 48px; align-items: center; }
+      .demo-back, .sheet-hint { display: none; }
+      .demo-peek { display: none !important; }
+      .cell-input, .cell-select { font-size: .9375rem; }
+      .c-num { width: 40px; }
+      .c-cat { width: 104px; }
+      .c-price { width: 90px; }
+      .c-flag { width: 116px; }
+      .c-daily { width: 156px; }
+      .sheet-table { min-width: 640px; font-size: .9375rem; }
+      .sheet-table th, .sheet-table td { padding: 0 10px; }
+    }
+
+    /* ==================================================================
+       4e. SEZIONE 5: ESEMPI (tab con tre locali di fantasia)
+       ================================================================== */
+    .examples { padding-block: clamp(72px, 11vw, 128px); overflow-x: clip; }  /* l'alone dietro il telefono non allarga la pagina */
+
+    .examples-title {
+      max-width: 18ch;
+      font-size: clamp(2rem, 6.4vw, 3.5rem);
+      font-weight: 600;
+      line-height: 1.08;
+      letter-spacing: -.03em;
+      text-wrap: balance;
+    }
+
+    .examples-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: clamp(36px, 7vw, 56px);
+      align-items: center;
+    }
+    .examples-text { min-width: 0; }
+    .ex-list { margin-top: clamp(28px, 5vw, 48px); }
+
+    .ex-caption {
+      margin-bottom: 14px;
+      color: var(--muted);
+      font-size: .9375rem;
+    }
+
+    /* Elenco dei tre locali (tab) */
+    .ex-tablist { display: flex; flex-direction: column; gap: 12px; }
+    .ex-tab {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      width: 100%;
+      padding: 18px 20px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: transparent;
+      color: var(--text);
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+      transition: border-color .2s ease, background-color .2s ease;
+    }
+    .ex-tab:hover { border-color: var(--line-strong); }
+    .ex-tab[aria-selected="true"] { border-color: var(--text); background: rgba(245, 245, 247, .05); }
+    .ex-tab-name { display: block; font-size: 1.1875rem; font-weight: 600; letter-spacing: -.01em; }
+    .ex-tab-style { display: block; margin-top: 2px; color: var(--muted); font-size: .9375rem; }
+    /* Tre pallini con i colori del tema del locale */
+    .ex-swatches { display: flex; flex: none; padding-left: 5px; }
+    .ex-swatch {
+      width: 20px;
+      height: 20px;
+      margin-left: -5px;
+      border: 1px solid rgba(245, 245, 247, .28);
+      border-radius: 50%;
+    }
+
+    /* Telefono */
+    .ex-stage {
+      position: relative;
+      display: flex;
+      justify-content: center;
+    }
+    .ex-stage::before {
+      content: "";
+      position: absolute;
+      inset: -10% -8%;
+      background: radial-gradient(closest-side, rgba(184, 188, 196, .12), transparent 72%);
+      pointer-events: none;
+    }
+    .phone--ex {
+      width: clamp(264px, 78vw, 320px);
+      aspect-ratio: 9 / 19.2;
+      box-shadow:
+        0 50px 90px -30px rgba(0, 0, 0, .9),
+        inset 0 0 0 1px rgba(255, 255, 255, .05);
+    }
+    .phone--ex .phone-screen {
+      background: var(--m-bg, #050608);
+      transition: background-color .3s ease;
+    }
+    .phone--ex .phone-screen::after { display: none; }
+
+    /* ---------- Menù di esempio: stessa struttura, tema diverso ----------
+       Ogni locale definisce solo queste variabili e poche regole di stile.   */
+    .phone-screen[data-theme="lungolago"] {
+      --m-bg: #0B0B0C;
+      --m-text: #EFE8D8;
+      --m-muted: #A39A86;
+      --m-accent: #C9A24D;
+      --m-line: rgba(201, 162, 77, .3);
+      --m-font: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    }
+    .phone-screen[data-theme="forno"] {
+      --m-bg: #F5EBDA;
+      --m-text: #3A2118;
+      --m-muted: #7A5C4D;
+      --m-accent: #B23A24;
+      --m-line: rgba(178, 58, 36, .35);
+      --m-font: var(--font);
+    }
+    .phone-screen[data-theme="barilotto"] {
+      --m-bg: #14241B;
+      --m-text: #EADFC8;
+      --m-muted: #AAB8A6;
+      --m-accent: #D7B27A;
+      --m-line: rgba(234, 223, 200, .16);
+      --m-font: var(--font);
+    }
+
+    .ex-menu {
+      position: absolute;
+      inset: 0;
+      overflow-y: auto;
+      color: var(--m-text);
+      font-family: var(--m-font);
+      scrollbar-width: none;
+      transition: opacity .2s ease;
+    }
+    .ex-menu::-webkit-scrollbar { display: none; }
+    .ex-menu.is-out { opacity: 0; }
+
+    .ex-head { padding: 58px 18px 18px; }
+    .ex-name { font-size: 1.375rem; line-height: 1.15; }
+    .ex-tag { margin-top: 4px; color: var(--m-muted); font-size: .75rem; }
+    .ex-body { padding: 0 18px 32px; }
+
+    .ex-sec-title { margin-top: 18px; color: var(--m-accent); font-size: .8125rem; font-weight: 600; }
+    .ex-item {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 9px 0;
+    }
+    .ex-item-name { display: block; font-size: .875rem; font-weight: 500; }
+    .ex-item-desc { display: block; margin-top: 1px; color: var(--m-muted); font-size: .6875rem; line-height: 1.35; }
+    .ex-item-price { flex: none; color: var(--m-accent); font-size: .8125rem; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+    /* Caffè Lungolago: elegante, scuro e oro, titoli centrati con filetti */
+    [data-theme="lungolago"] .ex-head { text-align: center; padding-bottom: 20px; }
+    [data-theme="lungolago"] .ex-name { font-weight: 400; font-size: 1.5rem; letter-spacing: .06em; }
+    [data-theme="lungolago"] .ex-tag { font-style: italic; letter-spacing: .02em; }
+    [data-theme="lungolago"] .ex-head::after {
+      content: "";
+      display: block;
+      width: 44px;
+      height: 1px;
+      margin: 14px auto 0;
+      background: var(--m-accent);
+    }
+    [data-theme="lungolago"] .ex-sec-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 20px;
+      font-size: .75rem;
+      font-weight: 400;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+    }
+    [data-theme="lungolago"] .ex-sec-title::before,
+    [data-theme="lungolago"] .ex-sec-title::after { content: ""; flex: 1; height: 1px; background: var(--m-line); }
+    [data-theme="lungolago"] .ex-item { padding: 10px 0; }
+    [data-theme="lungolago"] .ex-item-name { font-weight: 400; font-size: .9375rem; }
+    [data-theme="lungolago"] .ex-item-desc { font-style: italic; }
+    [data-theme="lungolago"] .ex-item-price { font-weight: 400; }
+
+    /* Pizzeria Il Forno: calda, rosso mattone e crema */
+    [data-theme="forno"] .ex-head { border-bottom: 3px solid var(--m-accent); }
+    [data-theme="forno"] .ex-name { color: var(--m-accent); font-size: 1.5rem; font-weight: 600; letter-spacing: -.02em; }
+    [data-theme="forno"] .ex-sec-title {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 3px 13px;
+      border-radius: 999px;
+      background: var(--m-accent);
+      color: #F5EBDA;
+      font-size: .75rem;
+    }
+    [data-theme="forno"] .ex-item { border-bottom: 1px dotted var(--m-line); }
+    [data-theme="forno"] .ex-item-name { font-weight: 600; }
+    [data-theme="forno"] .ex-item-price { font-weight: 700; font-size: .875rem; }
+
+    /* Pub Il Barilotto: legno e verde scuro */
+    [data-theme="barilotto"] .ex-head {
+      margin-bottom: 4px;
+      border-bottom: 3px solid rgba(0, 0, 0, .35);
+      background:
+        repeating-linear-gradient(90deg, rgba(0, 0, 0, .14) 0 2px, transparent 2px 26px),
+        linear-gradient(180deg, #6B4A2E, #4A311E);
+      color: #F1E6CF;
+    }
+    [data-theme="barilotto"] .ex-tag { color: #D9C7A3; }
+    [data-theme="barilotto"] .ex-name { font-weight: 600; letter-spacing: -.01em; }
+    [data-theme="barilotto"] .ex-sec-title {
+      margin-top: 20px;
+      padding-bottom: 6px;
+      border-bottom: 3px double var(--m-line);
+      font-size: .8125rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    [data-theme="barilotto"] .ex-item { border-bottom: 1px solid var(--m-line); }
+    [data-theme="barilotto"] .ex-item-name { font-weight: 600; }
+
+    /* Su schermo largo: elenco a sinistra, telefono a destra */
+    @media (min-width: 900px) {
+      .examples-grid { grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); gap: 72px; align-items: center; }
+      .ex-tablist { max-width: 460px; }
+      .ex-stage { justify-content: center; }
+    }
+
+    /* ==================================================================
+       4f. SEZIONE 6: VANTAGGI
+       ================================================================== */
+    .perks-section { padding-block: 0 clamp(72px, 11vw, 128px); }
+
+    .perks-title {
+      font-size: clamp(2rem, 6.4vw, 3.5rem);
+      font-weight: 600;
+      line-height: 1.08;
+      letter-spacing: -.03em;
+    }
+
+    /* Un unico riquadro con bordo sottile, diviso in tre blocchi da filetti */
+    .perks {
+      overflow: hidden;
+      margin-top: clamp(32px, 6vw, 56px);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+    }
+    .perk {
+      padding: clamp(28px, 4vw, 44px) clamp(24px, 3.2vw, 40px);
+      transition: background-color .3s ease;
+    }
+    .perk + .perk { border-top: 1px solid var(--line); }
+
+    .perk-icon {
+      display: block;
+      width: 48px;
+      height: 48px;
+      margin-bottom: clamp(24px, 4vw, 40px);
+      color: var(--text);
+      transition: transform .3s ease;
+    }
+    .perk-name {
+      font-size: clamp(1.25rem, 2.2vw, 1.4375rem);
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: -.015em;
+      text-wrap: balance;
+    }
+    .perk-desc {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 1.0625rem;
+      line-height: 1.55;
+      text-wrap: pretty;
+    }
+
+    /* Hover leggero: solo dove esiste davvero (non sui touch) */
+    @media (hover: hover) {
+      .perk:hover { background: rgba(245, 245, 247, .035); }
+      .perk:hover .perk-icon { transform: translateY(-3px); }
+    }
+
+    @media (min-width: 900px) {
+      .perks { display: grid; grid-template-columns: repeat(3, 1fr); }
+      .perk + .perk { border-top: 0; border-left: 1px solid var(--line); }
+      .perk:nth-child(2) { --d: .12s; }
+      .perk:nth-child(3) { --d: .24s; }
+    }
+
+    /* ==================================================================
+       4g. SEZIONE 7: CONTATTI E FOOTER
+       ================================================================== */
+    .contact { padding-block: 0 clamp(56px, 9vw, 96px); }
+
+    .contact-panel {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(32px, 6vw, 80px);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background:
+        radial-gradient(60% 90% at 0% 0%, rgba(184, 188, 196, .10), transparent 70%),
+        rgba(245, 245, 247, .015);
+    }
+    .contact-title {
+      max-width: 15ch;
+      font-size: clamp(2.25rem, 8vw, 4.5rem);
+      font-weight: 600;
+      line-height: 1.04;
+      letter-spacing: -.035em;
+      text-wrap: balance;
+    }
+    .contact-sub {
+      margin-top: clamp(18px, 3vw, 26px);
+      max-width: 36ch;
+      color: var(--muted);
+      font-size: clamp(1.0625rem, 2.6vw, 1.3125rem);
+      line-height: 1.5;
+      text-wrap: pretty;
+    }
+
+    /* Due grandi pulsanti */
+    .contact-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: clamp(28px, 5vw, 44px);
+    }
+    .btn-lg {
+      flex: 1 1 100%;
+      gap: 12px;
+      min-height: 64px;
+      padding: 0 30px;
+      font-size: 1.0625rem;
+    }
+    .btn-lg svg { flex: none; width: 22px; height: 22px; }
+
+    /* Recapiti in chiaro, per chi preferisce copiarli */
+    .contact-direct {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 28px;
+      margin-top: clamp(22px, 4vw, 32px);
+      color: var(--muted);
+      font-size: .9375rem;
+    }
+    .contact-direct a { color: var(--text); text-underline-offset: 4px; }
+    .contact-direct a:hover { text-decoration-thickness: 2px; }
+
+    /* Footer minimale */
+    .site-footer { border-top: 1px solid var(--line); }
+    .footer-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 20px;
+      padding-block: 32px calc(32px + env(safe-area-inset-bottom, 0px));
+    }
+    .brand-crop--sm { height: 38px; }
+    .footer-text { color: var(--muted); font-size: .9375rem; line-height: 1.5; }
+    .footer-top {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 0 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: .9375rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: border-color .2s ease, background-color .2s ease;
+    }
+    .footer-top:hover { border-color: var(--text); background: rgba(245, 245, 247, .06); }
+    .footer-top svg { width: 16px; height: 16px; }
+
+    @media (min-width: 600px) {
+      .btn-lg { flex: 0 0 auto; }
+    }
+    @media (min-width: 900px) {
+      .footer-inner { flex-direction: row; align-items: center; justify-content: space-between; gap: 32px; }
+      .footer-text { text-align: center; }
+    }
+
+    /* ==================================================================
+       5. ANIMAZIONI ALLO SCROLL
+       Gli elementi con .reveal compaiono con una dissolvenza leggera.
+       Senza JavaScript restano sempre visibili.
+       ================================================================== */
+    .js .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity .8s cubic-bezier(.2, .7, .2, 1) var(--d, 0s),
+                  transform .8s cubic-bezier(.2, .7, .2, 1) var(--d, 0s);
+    }
+    .js .reveal.is-visible { opacity: 1; transform: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .js .reveal { opacity: 1; transform: none; transition: none; }
+      .menu-row.is-flash, .menu-price.is-in, .feat.is-new, .sheet-table td.is-hit, .demo-peek, .menu-cat.is-appearing, .sheet-table tr.is-adding > * { animation: none; }
+      .sheet-table tr.is-removing > *, .menu-row.is-removing { transition: none; }
+      .skip-link { transition: none; }
+      .chalk-arrows { animation: none; }
+      .chalk-line { animation: none; stroke-dashoffset: 0; }
+      .ex-menu, .phone--ex .phone-screen, .ex-tab, .perk, .perk-icon, .footer-top { transition: none; }
+    }
+  </style>
+</head>
+
+<body id="pagina">
+  <a class="skip-link" href="#contenuto">Vai ai contenuti</a>
+
+  <!-- ====================== BARRA IN ALTO ====================== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#top" aria-label="Kiso Studio, torna all'inizio della pagina">
+        <span class="brand-crop">
+          <!-- Logo originale, non modificato: il file kisostudiologo.jpeg deve stare nella stessa cartella di questa pagina. alt vuoto: il nome è nell'aria-label del link -->
+          <img src="kisostudiologo.jpeg" alt="" width="2576" height="1438" decoding="async">
+        </span>
+      </a>
+      <a class="btn btn-ghost btn-sm" href="#contatti">Scrivici</a>
+    </div>
+  </header>
+
+  <main id="contenuto">
+
+    <!-- ====================== SEZIONE 1: HERO ====================== -->
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="container hero-grid">
+
+        <div class="hero-copy">
+          <h1 class="hero-title reveal" id="hero-title">Il menù del tuo locale, sempre aggiornato</h1>
+          <p class="hero-sub reveal" style="--d:.1s">Menù digitali di nuova generazione per ristoranti, bar e pub di Lecco e provincia.</p>
+          <div class="hero-actions reveal" style="--d:.2s">
+            <span class="cta-demo">
+              <a class="btn btn-primary" href="#demo">Guarda la demo</a>
+              <!-- Frecce a gessetto su lavagna: decorative, puntano al pulsante.
+                   Il filtro #chalk rende il tratto ruvido e "polveroso". -->
+              <svg class="chalk-arrows" viewBox="0 0 220 96" aria-hidden="true" focusable="false">
+                <defs>
+                  <filter id="chalk" x="-10%" y="-10%" width="120%" height="120%">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="2" seed="4" result="n"/>
+                    <feDisplacementMap in="SourceGraphic" in2="n" scale="3.2" xChannelSelector="R" yChannelSelector="G" result="rough"/>
+                    <feTurbulence type="fractalNoise" baseFrequency="1.6" numOctaves="1" seed="9" result="g"/>
+                    <feColorMatrix in="g" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  5 0 0 0 -0.85" result="grain"/>
+                    <feComposite in="rough" in2="grain" operator="in"/>
+                  </filter>
+                </defs>
+                <g filter="url(#chalk)" fill="none" stroke="#F5F5F7" stroke-linecap="round" stroke-linejoin="round">
+                  <!-- freccia grande, da destra -->
+                  <path class="chalk-line" style="--i:0" pathLength="1" d="M205 80 C172 90 122 74 99 24" stroke-width="4.6"/>
+                  <path class="chalk-line" style="--i:1" pathLength="1" d="M97 44 L99 24 L115 36" stroke-width="4.6"/>
+                  <!-- freccia piccola, da sinistra -->
+                  <path class="chalk-line" style="--i:2" pathLength="1" d="M14 84 C20 66 32 46 47 28" stroke-width="4.4"/>
+                  <path class="chalk-line" style="--i:3" pathLength="1" d="M30 34 L47 28 L44 46" stroke-width="4.4"/>
+                </g>
+              </svg>
+            </span>
+            <a class="btn btn-ghost" href="#contatti">Scrivici</a>
+          </div>
+        </div>
+
+        <!-- Telefono: decorativo per chi usa lo screen reader, descritto dall'aria-label -->
+        <div class="hero-visual reveal" style="--d:.3s" data-phone>
+          <div class="phone" role="img"
+               aria-label="Anteprima di un menù digitale su smartphone: quando il titolare cambia un prezzo nel foglio Google, il menù mostra il nuovo prezzo.">
+            <div class="phone-screen">
+              <div class="phone-island"></div>
+
+              <div class="menu">
+                <p class="menu-venue">Birreria del Molo</p>
+                <p class="menu-place">Lecco</p>
+
+                <h3 class="menu-cat">Alla spina</h3>
+                <ul>
+                  <li class="menu-row">
+                    <span class="menu-item">Birra piccola</span>
+                    <span class="menu-price">3,50 €</span>
+                  </li>
+                  <li class="menu-row" data-update data-label="Birra media" data-from="5,00 €" data-to="5,50 €">
+                    <span class="menu-item">Birra media</span>
+                    <span class="menu-price">5,00 €</span>
+                  </li>
+                  <li class="menu-row">
+                    <span class="menu-item">Birra grande</span>
+                    <span class="menu-price">7,00 €</span>
+                  </li>
+                </ul>
+
+                <h3 class="menu-cat">Cocktail</h3>
+                <ul>
+                  <li class="menu-row" data-update data-label="Spritz" data-from="6,00 €" data-to="6,50 €">
+                    <span class="menu-item">Spritz</span>
+                    <span class="menu-price">6,00 €</span>
+                  </li>
+                  <li class="menu-row">
+                    <span class="menu-item">Negroni</span>
+                    <span class="menu-price">7,00 €</span>
+                  </li>
+                </ul>
+
+                <h3 class="menu-cat">Cucina</h3>
+                <ul>
+                  <li class="menu-row" data-update data-label="Hamburger" data-from="12,00 €" data-to="12,50 €">
+                    <span class="menu-item">Hamburger della casa
+                      <span class="menu-desc">Pane artigianale e cheddar</span>
+                    </span>
+                    <span class="menu-price">12,00 €</span>
+                  </li>
+                  <li class="menu-row">
+                    <span class="menu-item">Tagliere misto
+                      <span class="menu-desc">Salumi e formaggi del territorio</span>
+                    </span>
+                    <span class="menu-price">14,00 €</span>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Mostra cosa è cambiato -->
+              <div class="change-chip" data-chip>
+                <span class="chip-label" data-chip-label>Birra media</span>
+                <span class="chip-old" data-chip-old>5,00 €</span>
+                <span class="chip-arrow">→</span>
+                <span class="chip-new" data-chip-new>5,50 €</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ====================== SEZIONE 2: CHI SIAMO ====================== -->
+    <section class="about" id="chi-siamo" aria-labelledby="about-title">
+      <div class="container">
+        <div class="about-inner">
+        <h2 class="about-title reveal" id="about-title">Menù che si aggiornano da soli, davvero semplici</h2>
+        <p class="about-text reveal" style="--d:.12s">
+          Creiamo menù digitali veloci e dal design premium per i locali di
+          <span class="badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg>
+            Lecco e provincia
+          </span>.
+          Il&nbsp;titolare modifica un foglio Google dal telefono e il menù online si aggiorna in pochi minuti.
+        </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================== SEZIONE 3: COME FUNZIONA ====================== -->
+    <section class="steps-section" id="come-funziona" aria-labelledby="steps-title">
+      <div class="container">
+        <h2 class="steps-title reveal" id="steps-title">Come funziona</h2>
+
+        <ol class="steps">
+          <li class="step reveal">
+            <div class="step-top">
+              <span class="step-num" aria-hidden="true">1</span>
+              <!-- Icona: carta del menù con righe e piatto -->
+              <svg class="step-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="10" y="5" width="28" height="38" rx="3"/><path d="M16 14h16M16 21h16M16 28h9"/><circle cx="31" cy="34" r="3"/></svg>
+            </div>
+            <h3 class="step-name">Costruiamo il tuo menù</h3>
+            <p class="step-desc">Design su misura per il tuo locale.</p>
+          </li>
+
+          <li class="step reveal">
+            <div class="step-top">
+              <span class="step-num" aria-hidden="true">2</span>
+              <!-- Icona: foglio di calcolo -->
+              <svg class="step-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="8" width="36" height="32" rx="3"/><path d="M6 18h36M6 29h36M19 18v22"/></svg>
+            </div>
+            <h3 class="step-name">Ricevi il tuo foglio Google</h3>
+            <p class="step-desc">Un foglio semplice, già pronto e tuo.</p>
+          </li>
+
+          <li class="step reveal">
+            <div class="step-top">
+              <span class="step-num" aria-hidden="true">3</span>
+              <!-- Icona: smartphone con spunta -->
+              <svg class="step-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="13" y="4" width="22" height="40" rx="4"/><path d="M21 8h6"/><path d="M19 25l4 4 7-8"/></svg>
+            </div>
+            <h3 class="step-name">Aggiorni dal telefono</h3>
+            <p class="step-desc">Cambi un prezzo, segni un piatto esaurito o aggiungi il piatto del giorno: il menù si aggiorna in pochi minuti.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ====================== SEZIONE 4: DEMO INTERATTIVA (sfondo avorio) ====================== -->
+    <section class="demo" id="demo" aria-labelledby="demo-title">
+      <div class="container">
+        <div class="demo-grid">
+
+        <!-- Colonna sinistra: titolo, pulsanti guida, foglio. Il telefono si centra su tutto questo blocco -->
+        <div class="demo-left">
+        <h2 class="demo-title reveal" id="demo-title">Provalo tu</h2>
+
+        <!-- Pulsanti guida: eseguono l'azione in automatico sul foglio -->
+        <div class="demo-actions reveal" role="group" aria-label="Azioni guidate">
+          <button type="button" class="demo-btn" data-action="price">Cambia un prezzo</button>
+          <button type="button" class="demo-btn" data-action="soldout">Segna un piatto esaurito</button>
+          <button type="button" class="demo-btn" data-action="daily">Aggiungi il piatto del giorno</button>
+          <button type="button" class="demo-btn" data-action="add">Aggiungi un articolo</button>
+        </div>
+        <p class="demo-hint reveal">Oppure modifica tu le celle evidenziate del foglio.</p>
+
+          <!-- Foglio (la tabella viene costruita da JavaScript) -->
+          <div class="sheet-col reveal">
+            <div class="sheet" data-sheet>
+              <div class="sheet-bar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9h16M4 15h16M10 9v12"/></svg>
+                <span class="sheet-title">Menù Birreria del Molo</span>
+              </div>
+              <div class="sheet-formula" aria-hidden="true">
+                <span class="fx-ref" data-fx-ref>A1</span>
+                <span class="fx-sep">fx</span>
+                <span class="fx-val" data-fx-val>Categoria</span>
+              </div>
+              <div class="sheet-scroll" data-sheet-scroll>
+                <table class="sheet-table">
+                  <caption class="sr-only">Foglio di esempio con il menù di un locale. Puoi modificare le colonne Prezzo, Disponibile e Piatto del giorno.</caption>
+                  <colgroup>
+                    <col class="c-num"><col class="c-cat"><col><col class="c-price"><col class="c-flag"><col class="c-daily">
+                  </colgroup>
+                  <thead>
+                    <tr class="letters" aria-hidden="true"><th></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
+                    <tr>
+                      <th class="rownum" aria-hidden="true">1</th>
+                      <th scope="col">Categoria</th>
+                      <th scope="col">Nome</th>
+                      <th scope="col" class="col-price">Prezzo</th>
+                      <th scope="col">Disponibile</th>
+                      <th scope="col">Piatto del giorno</th>
+                    </tr>
+                  </thead>
+                  <tbody data-sheet-body></tbody>
+                </table>
+              </div>
+              <div class="sheet-tabs" aria-hidden="true">
+                <span class="sheet-tab">Menù</span>
+                <span class="sheet-hint">Scorri di lato per vedere tutte le colonne</span>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /demo-left -->
+
+          <!-- Smartphone con il menù che si aggiorna -->
+          <div class="phone-col reveal" style="--d:.12s">
+            <div class="phone phone--demo" data-demo-phone>
+              <div class="phone-screen">
+                <div class="phone-island"></div>
+                <div class="menu demo-menu" data-menu role="region" tabindex="0" aria-label="Anteprima del menù sul telefono del cliente">
+                  <p class="menu-venue">Birreria del Molo</p>
+                  <p class="menu-place">Lecco</p>
+                  <div class="feat-wrap" data-feat></div>
+                  <div data-list></div>
+                </div>
+              </div>
+            </div>
+            <button type="button" class="demo-back" data-back>Torna al foglio</button>
+          </div>
+
+        </div>
+
+        <p class="demo-note">Demo simulata. Nel servizio reale il menù si aggiorna in pochi minuti dopo la modifica.</p>
+        <noscript><p class="demo-note">Per provare la demo serve attivare JavaScript.</p></noscript>
+
+        <!-- Annunci per screen reader quando il menù cambia -->
+        <p class="sr-only" role="status" aria-live="polite" data-status></p>
+
+        <!-- Solo su telefono, dopo una modifica a mano: porta a vedere il menù -->
+        <button type="button" class="demo-peek" data-peek hidden>Vedi il menù aggiornato</button>
+      </div>
+    </section>
+
+    <!-- ====================== SEZIONE 5: ESEMPI ====================== -->
+    <section class="examples" id="esempi" aria-labelledby="examples-title">
+      <div class="container">
+        <div class="examples-grid">
+
+          <!-- Colonna sinistra: titolo e tab. Il telefono si centra su questo blocco -->
+          <div class="examples-text">
+          <h2 class="examples-title reveal" id="examples-title">Un menù su misura per ogni locale</h2>
+
+          <div class="ex-list reveal" style="--d:.08s">
+            <p class="ex-caption">Locali di esempio</p>
+            <!-- I tre tab vengono costruiti da JavaScript a partire dal modello dati -->
+            <div class="ex-tablist" role="tablist" aria-label="Locali di esempio" aria-orientation="vertical" data-ex-tabs></div>
+            <noscript><p class="ex-caption">Per vedere gli esempi serve attivare JavaScript.</p></noscript>
+          </div>
+
+          </div><!-- /examples-text -->
+
+          <div class="ex-stage reveal" style="--d:.16s">
+            <div class="phone phone--ex">
+              <div class="phone-screen" data-ex-screen data-theme="lungolago">
+                <div class="phone-island"></div>
+                <div class="ex-menu" data-ex-menu role="tabpanel" id="ex-panel" tabindex="0"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================== SEZIONE 6: VANTAGGI ====================== -->
+    <section class="perks-section" id="vantaggi" aria-labelledby="perks-title">
+      <div class="container">
+        <h2 class="perks-title reveal" id="perks-title">I vantaggi</h2>
+
+        <ul class="perks">
+          <li class="perk reveal">
+            <!-- Icona: calendario barrato (nessun canone) -->
+            <svg class="perk-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="9" width="34" height="32" rx="3"/><path d="M7 18h34M16 5v8M32 5v8M12 40L38 14"/></svg>
+            <h3 class="perk-name">Zero abbonamenti</h3>
+            <p class="perk-desc">Paghi il lavoro una volta sola.</p>
+          </li>
+          <li class="perk reveal">
+            <!-- Icona: griglia di app barrata -->
+            <svg class="perk-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><rect x="27" y="9" width="12" height="12" rx="2"/><rect x="9" y="27" width="12" height="12" rx="2"/><rect x="27" y="27" width="12" height="12" rx="2"/><path d="M5 43L43 5"/></svg>
+            <h3 class="perk-name">Nessuna app, nessun gestionale</h3>
+            <p class="perk-desc">Basta un foglio Google.</p>
+          </li>
+          <li class="perk reveal">
+            <!-- Icona: chiave -->
+            <svg class="perk-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="16" cy="24" r="8"/><path d="M24 24h19M36 24v7M42 24v5"/></svg>
+            <h3 class="perk-name">Il software è tuo</h3>
+            <p class="perk-desc">Nessun vincolo con noi o con piattaforme esterne.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ====================== SEZIONE 7: CONTATTI ====================== -->
+    <section class="contact" id="contatti" aria-labelledby="contact-title">
+      <div class="container">
+        <div class="contact-panel">
+          <h2 class="contact-title reveal" id="contact-title">Hai un locale a Lecco o provincia?</h2>
+          <p class="contact-sub reveal" style="--d:.1s">Scrivici, ti mostriamo come potrebbe essere il tuo menù.</p>
+
+          <div class="contact-actions reveal" style="--d:.2s">
+            <!-- Profilo Instagram: @kiso.menu -->
+            <a class="btn btn-lg btn-primary" href="https://www.instagram.com/kiso.menu/" target="_blank" rel="noopener noreferrer" aria-label="Scrivici su Instagram (si apre in una nuova scheda)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".6" fill="currentColor"/></svg>
+              Scrivici su Instagram
+            </a>
+            <a class="btn btn-lg btn-ghost" href="mailto:info.kisostudio@gmail.com" aria-label="Scrivici via mail a info.kisostudio@gmail.com">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 7l8.5 6 8.5-6"/></svg>
+              Scrivici via mail
+            </a>
+          </div>
+
+          <p class="contact-direct reveal" style="--d:.28s">
+            <span>Instagram: <a href="https://www.instagram.com/kiso.menu/" target="_blank" rel="noopener noreferrer">@kiso.menu</a></span>
+            <span>Email: <a href="mailto:info.kisostudio@gmail.com">info.kisostudio@gmail.com</a></span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ====================== FOOTER ====================== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <a class="brand" href="#top" aria-label="Kiso Studio, torna all'inizio della pagina">
+        <span class="brand-crop brand-crop--sm">
+          <!-- Stesso logo dell'intestazione: l'indirizzo dell'immagine viene copiato da JavaScript -->
+          <img alt="" width="2576" height="1438" decoding="async" data-footer-logo>
+        </span>
+      </a>
+      <p class="footer-text">Kiso Studio · Lecco e provincia · <span data-year>2026</span></p>
+      <a class="footer-top" href="#top">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+        Torna su
+      </a>
+    </div>
+  </footer>
+
+  <script>
+    /* ==================================================================
+       JAVASCRIPT (vanilla, nessuna libreria)
+       ================================================================== */
+
+    /* ---------- 1. Comparsa allo scroll (IntersectionObserver) ---------- */
+    (function () {
+      var items = document.querySelectorAll('.reveal');
+      if (!items.length) return;
+
+      // Browser molto vecchi: mostra tutto subito
+      if (!('IntersectionObserver' in window)) {
+        items.forEach(function (el) { el.classList.add('is-visible'); });
+        return;
+      }
+
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target); // una volta sola
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -6% 0px' });
+
+      items.forEach(function (el) { observer.observe(el); });
+    })();
+
+    /* ---------- 2. Mockup: un prezzo cambia ogni pochi secondi ---------- */
+    (function () {
+      var wrap = document.querySelector('[data-phone]');
+      if (!wrap) return;
+
+      var rows  = Array.prototype.slice.call(wrap.querySelectorAll('[data-update]'));
+      var chip  = wrap.querySelector('[data-chip]');
+      var cLab  = wrap.querySelector('[data-chip-label]');
+      var cOld  = wrap.querySelector('[data-chip-old]');
+      var cNew  = wrap.querySelector('[data-chip-new]');
+      if (!rows.length || !chip) return;
+
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Aggiorna etichetta e testo del prezzo
+      function showChip(row, from, to) {
+        cLab.textContent = row.getAttribute('data-label');
+        cOld.textContent = from;
+        cNew.textContent = to;
+      }
+
+      /* Movimento ridotto: niente animazione, mostriamo subito lo stato aggiornato */
+      if (reduceMotion) {
+        var row0 = rows[0];
+        var from0 = row0.getAttribute('data-from');
+        var to0 = row0.getAttribute('data-to');
+        row0.querySelector('.menu-price').textContent = to0;
+        row0.classList.add('is-updated');
+        showChip(row0, from0, to0);
+        wrap.classList.add('is-static');
+        return;
+      }
+
+      var STEP_MS = 3800;      // un cambio ogni ~4 secondi
+      var step = 0;            // contatore dei cambi
+      var loop = null;         // setInterval
+      var timers = [];         // setTimeout da annullare in pausa
+
+      function later(fn, ms) { timers.push(setTimeout(fn, ms)); }
+
+      function runStep() {
+        var row = rows[step % rows.length];
+        // Nel secondo giro i prezzi tornano com'erano, così il loop è infinito
+        var forward = Math.floor(step / rows.length) % 2 === 0;
+        var from = row.getAttribute(forward ? 'data-from' : 'data-to');
+        var to   = row.getAttribute(forward ? 'data-to' : 'data-from');
+        var price = row.querySelector('.menu-price');
+        step++;
+
+        showChip(row, from, to);
+        chip.classList.add('is-visible');
+
+        // Evidenzia la riga (riavvia l'animazione se già presente)
+        row.classList.remove('is-flash');
+        void row.offsetWidth;
+        row.classList.add('is-flash');
+
+        // Il vecchio prezzo esce, entra il nuovo
+        price.classList.add('is-out');
+        later(function () {
+          price.textContent = to;
+          price.classList.remove('is-out');
+          price.classList.add('is-in');
+        }, 300);
+        later(function () { price.classList.remove('is-in'); }, 760);
+
+        // L'etichetta si ritira prima del prossimo cambio
+        later(function () { chip.classList.remove('is-visible'); }, 2700);
+        later(function () { row.classList.remove('is-flash'); }, 2500);
+      }
+
+      function start() {
+        if (loop) return;
+        later(runStep, 900);
+        loop = setInterval(runStep, STEP_MS);
+      }
+      function stop() {
+        clearInterval(loop);
+        loop = null;
+        timers.forEach(clearTimeout);
+        timers = [];
+      }
+
+      // L'animazione gira solo quando il telefono è visibile e la scheda è attiva (meno batteria)
+      var onScreen = false;
+      function sync() {
+        if (onScreen && !document.hidden) start(); else stop();
+      }
+
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (entries) {
+          onScreen = entries[0].isIntersecting;
+          sync();
+        }, { threshold: 0.3 }).observe(wrap);
+      } else {
+        onScreen = true;
+      }
+      document.addEventListener('visibilitychange', sync);
+      sync();
+    })();
+
+    /* ---------- 3. Demo interattiva: foglio + menù sul telefono ---------- */
+    (function () {
+      var root = document.getElementById('demo');
+      if (!root) return;
+
+      function $(sel) { return root.querySelector(sel); }
+      var tbody    = $('[data-sheet-body]');
+      var sheetEl  = $('[data-sheet]');
+      var menu     = $('[data-menu]');
+      var featWrap = $('[data-feat]');
+      var listWrap = $('[data-list]');
+      var phoneEl  = $('[data-demo-phone]');
+      var status   = $('[data-status]');
+      var fxRef    = $('[data-fx-ref]');
+      var fxVal    = $('[data-fx-val]');
+      var peek     = $('[data-peek]');
+      var back     = $('[data-back]');
+      var buttons  = root.querySelectorAll('[data-action]');
+
+      var reduce   = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var wide     = window.matchMedia('(min-width: 900px)'); // stesso punto del CSS: due colonne
+      var behavior = reduce ? 'auto' : 'smooth';
+
+      /* ---- Dati di esempio (il "foglio") ---- */
+      var ITEMS = [
+        { cat: 'Birre',    name: 'Birra piccola',          price: '3,50',  desc: 'Alla spina, 0,2 l' },
+        { cat: 'Birre',    name: 'Birra media',            price: '5,00',  desc: 'Alla spina, 0,4 l' },
+        { cat: 'Birre',    name: 'Birra grande',           price: '7,00',  desc: 'Alla spina, 0,6 l' },
+        { cat: 'Cocktail', name: 'Spritz',                 price: '6,00',  desc: 'Aperitivo, prosecco, soda' },
+        { cat: 'Cocktail', name: 'Negroni',                price: '7,00',  desc: 'Gin, vermut rosso, bitter' },
+        { cat: 'Cucina',   name: 'Hamburger della casa',   price: '12,00', desc: 'Pane artigianale e cheddar' },
+        { cat: 'Cucina',   name: 'Tagliere misto',         price: '14,00', desc: 'Salumi e formaggi del territorio' },
+        { cat: 'Cucina',   name: 'Risotto allo zafferano', price: '13,00', desc: 'Mantecato al burro' }
+      ];
+      var COL_LETTERS = ['A', 'B', 'C', 'D', 'E'];
+      var STAR = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.7-6.2 3.7 1.6-7L2 9.2l7.1-.6z"/></svg>';
+
+      /* ---- Utilità ---- */
+      function parsePrice(s) {
+        var n = parseFloat(String(s).replace(',', '.'));
+        return (isFinite(n) && n >= 0 && n < 1000) ? n : null;
+      }
+      function formatPrice(n) { return n.toFixed(2).replace('.', ','); }
+      function sleep(ms) { return new Promise(function (r) { setTimeout(r, reduce ? 0 : ms); }); }
+      function flash(el, cls) { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); }
+      function byName(name) { return ITEMS.filter(function (it) { return it.name === name; })[0]; }
+
+      /* ---- Costruzione del foglio e del menù ---- */
+      var lists = {};   // categoria -> { head, ul } nel menù del telefono
+
+      // Riga del foglio. Con blank = true le celle di testo partono vuote (animazione "Aggiungi un articolo").
+      function buildSheetRow(it, idx, blank) {
+        it.row = idx + 2;                         // numero di riga nel foglio (la riga 1 è l'intestazione)
+        var tr = document.createElement('tr');
+        tr.innerHTML =
+          '<td class="rownum" aria-hidden="true">' + it.row + '</td>' +
+          '<td>' + (blank ? '' : it.cat) + '</td>' +
+          '<th scope="row" class="cell-name">' + (blank ? '' : it.name) + '</th>' +
+          '<td class="editable col-price"><input class="cell-input" type="text" inputmode="decimal" autocomplete="off" maxlength="6" aria-label="Prezzo, ' + it.name + '"></td>' +
+          '<td class="editable col-flag"><select class="cell-select" aria-label="Disponibile, ' + it.name + '"><option value="1">SÌ</option><option value="0">NO</option></select></td>' +
+          '<td class="editable col-flag"><select class="cell-select" aria-label="Piatto del giorno, ' + it.name + '"><option value="0">NO</option><option value="1">SÌ</option></select></td>';
+        tbody.appendChild(tr);
+        it.tr      = tr;
+        it.tdCat   = tr.children[1];
+        it.thName  = tr.children[2];
+        it.tdPrice = tr.children[3];
+        it.tdAvail = tr.children[4];
+        it.tdDaily = tr.children[5];
+        it.input    = it.tdPrice.firstChild;
+        it.selAvail = it.tdAvail.firstChild;
+        it.selDaily = it.tdDaily.firstChild;
+        it.input.value = blank ? '' : it.price;
+        it.selAvail.value = '1';
+        it.selDaily.value = '0';
+        return tr;
+      }
+
+      // Riga del menù sul telefono (raggruppata per categoria; la categoria nuova viene creata al volo)
+      function buildPhoneRow(it) {
+        it.newCat = !lists[it.cat];
+        if (it.newCat) {
+          var h = document.createElement('h3');
+          h.className = 'menu-cat';
+          h.textContent = it.cat;
+          var ul = document.createElement('ul');
+          listWrap.appendChild(h);
+          listWrap.appendChild(ul);
+          lists[it.cat] = { head: h, ul: ul };
+        }
+        var li = document.createElement('li');
+        li.className = 'menu-row';
+        li.innerHTML =
+          '<span class="menu-info"><span class="menu-item">' + it.name + '</span>' +
+          '<span class="menu-desc" hidden>Esaurito</span></span>' +
+          '<span class="menu-price"></span>';
+        lists[it.cat].ul.appendChild(li);
+        it.li = li;
+        it.elPrice = li.querySelector('.menu-price');
+        it.elNote  = li.querySelector('.menu-desc');
+        it.catHead = lists[it.cat].head;
+      }
+
+      // Toglie un articolo aggiunto (foglio e telefono); se la categoria resta vuota sparisce anch'essa
+      function removeItem(it) {
+        it.tr.remove();
+        it.li.remove();
+        var group = lists[it.cat];
+        if (group && !group.ul.children.length) { group.head.remove(); group.ul.remove(); delete lists[it.cat]; }
+        ITEMS.splice(ITEMS.indexOf(it), 1);
+        paintFeatured();
+      }
+
+      ITEMS.forEach(function (it, i) {
+        it.avail = true;
+        it.daily = false;
+        buildSheetRow(it, i, false);
+        buildPhoneRow(it);
+      });
+
+      /* ---- Disegno dello stato ---- */
+      function paintRow(it, withFlash) {
+        it.elPrice.textContent = it.price + ' €';
+        it.li.classList.toggle('is-soldout', !it.avail);
+        it.elNote.hidden = it.avail;
+        if (withFlash) flash(it.li, 'is-flash');
+      }
+      function paintSelects(it) {
+        it.selAvail.classList.toggle('is-no', !it.avail);
+        it.selDaily.classList.toggle('is-yes', it.daily);
+      }
+
+      // Piatto del giorno: una scheda in evidenza in cima al menù
+      var shownDaily = {};
+      function paintFeatured() {
+        var frag = document.createDocumentFragment();
+        var now = {};
+        ITEMS.forEach(function (it, i) {
+          if (!(it.daily && it.avail)) return;
+          now[i] = true;
+          var card = document.createElement('div');
+          card.className = 'feat' + (shownDaily[i] ? '' : ' is-new');
+          card.innerHTML =
+            '<p class="feat-label">' + STAR + 'Piatto del giorno</p>' +
+            '<div class="feat-row"><div><p class="feat-name">' + it.name + '</p>' +
+            '<p class="feat-desc">' + it.desc + '</p></div>' +
+            '<span class="menu-price">' + it.price + ' €</span></div>';
+          frag.appendChild(card);
+        });
+        featWrap.innerHTML = '';
+        featWrap.appendChild(frag);
+        shownDaily = now;
+      }
+
+      ITEMS.forEach(function (it) { paintRow(it, false); paintSelects(it); });
+      paintFeatured();
+
+      /* ---- Barra della formula ---- */
+      function cellValue(it, col) {
+        if (col === 0) return it.cat;
+        if (col === 1) return it.name;
+        if (col === 2) return it.price;
+        if (col === 3) return it.avail ? 'SÌ' : 'NO';
+        return it.daily ? 'SÌ' : 'NO';
+      }
+      function setFx(it, col, override) {
+        fxRef.textContent = COL_LETTERS[col] + it.row;
+        fxVal.textContent = (override !== undefined) ? override : cellValue(it, col);
+      }
+
+      /* ---- Annuncio per screen reader ---- */
+      var statusTimer;
+      function announce(msg) {
+        clearTimeout(statusTimer);
+        statusTimer = setTimeout(function () { status.textContent = ''; status.textContent = msg; }, 500);
+      }
+      function message(it, field) {
+        if (field === 'price') return 'Menù aggiornato: ' + it.name + ' costa ' + it.price + ' euro.';
+        if (field === 'avail') return 'Menù aggiornato: ' + it.name + (it.avail ? ' è di nuovo disponibile.' : ' è esaurito.');
+        return 'Menù aggiornato: ' + it.name + (it.daily ? ' è il piatto del giorno.' : ' non è più il piatto del giorno.');
+      }
+
+      /* ---- Modifica di un valore (usata da mano e da automatismi) ---- */
+      function commit(it, field, value, cell) {
+        if (it[field] === value) return false;
+        it[field] = value;
+        paintRow(it, true);
+        paintSelects(it);
+        paintFeatured();
+        if (cell) flash(cell, 'is-hit');
+        announce(message(it, field));
+        return true;
+      }
+
+      /* ---- Pillola "Vedi il menù aggiornato" (solo telefono) ---- */
+      var phoneVisible = false;
+      var peekTimer;
+      function hidePeek() { peek.hidden = true; clearTimeout(peekTimer); }
+      function showPeek() {
+        if (wide.matches || phoneVisible || busy) return;
+        peek.hidden = false;
+        clearTimeout(peekTimer);
+        peekTimer = setTimeout(hidePeek, 4500);
+      }
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (entries) {
+          phoneVisible = entries[0].isIntersecting;
+          if (phoneVisible) hidePeek();
+        }, { threshold: 0.35 }).observe(phoneEl);
+      }
+      peek.addEventListener('click', function () {
+        hidePeek();
+        phoneEl.scrollIntoView({ behavior: behavior, block: 'center' });
+      });
+      back.addEventListener('click', function () {
+        sheetEl.scrollIntoView({ behavior: behavior, block: 'start' });
+      });
+
+      /* ---- Modifiche a mano ---- */
+      var busy = false;
+
+      tbody.addEventListener('input', function (e) {
+        var el = e.target;
+        if (!el.classList.contains('cell-input')) return;
+        var it = ITEMS[el.closest('tr').sectionRowIndex];
+        if (!it) return;
+        var clean = el.value.replace(/[^0-9.,]/g, '');   // solo cifre, virgola e punto
+        if (clean !== el.value) el.value = clean;
+        setFx(it, 2, clean);
+        var n = parsePrice(clean);
+        if (n !== null && commit(it, 'price', formatPrice(n))) showPeek();
+      });
+
+      tbody.addEventListener('change', function (e) {
+        var el = e.target;
+        if (el.tagName !== 'SELECT') return;
+        var it = ITEMS[el.closest('tr').sectionRowIndex];
+        if (!it) return;
+        var isAvail = (el === it.selAvail);
+        commit(it, isAvail ? 'avail' : 'daily', el.value === '1');
+        setFx(it, isAvail ? 3 : 4);
+        showPeek();
+      });
+
+      // All'uscita dal campo il prezzo viene scritto in forma ordinata (es. 5 diventa 5,00)
+      tbody.addEventListener('focusout', function (e) {
+        var el = e.target;
+        if (!el.classList.contains('cell-input')) return;
+        var it = ITEMS[el.closest('tr').sectionRowIndex];
+        if (!it) return;
+        el.value = it.price;
+      });
+      tbody.addEventListener('focusin', function (e) {
+        var el = e.target;
+        var tr = el.closest && el.closest('tr');
+        if (!tr || !el.closest('td.editable')) return;
+        var it = ITEMS[tr.sectionRowIndex];
+        if (!it) return;
+        setFx(it, el.classList.contains('cell-input') ? 2 : (el === it.selAvail ? 3 : 4));
+      });
+      tbody.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' && e.target.classList.contains('cell-input')) e.target.blur();
+      });
+
+      /* ---- Azioni guidate (con piccola animazione) ---- */
+      function setActive(td) {
+        var prev = tbody.querySelector('.is-active');
+        if (prev) prev.classList.remove('is-active');
+        if (td) td.classList.add('is-active');
+      }
+      // Porta la cella in vista (anche di lato nel foglio) e la seleziona. Niente focus: non apre la tastiera.
+      async function focusCell(it, td, col, override) {
+        td.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: behavior });
+        await sleep(500);
+        setActive(td);
+        setFx(it, col, override);
+      }
+      // Scrive un testo lettera per lettera in una cella (simula la digitazione)
+      async function typeText(it, col, text, write) {
+        for (var k = 1; k <= text.length; k++) {
+          write(text.slice(0, k));
+          setFx(it, col, text.slice(0, k));
+          await sleep(120);
+        }
+      }
+      var extra = null;   // articolo aggiunto dalla demo (se presente)
+      // Tiene visibile nel telefono la riga appena cambiata
+      function keepInView(it) {
+        var b = menu.getBoundingClientRect();
+        var r = it.li.getBoundingClientRect();
+        if (r.top < b.top + 64 || r.bottom > b.bottom - 24) {
+          menu.scrollTo({ top: menu.scrollTop + (r.top - b.top) - b.height / 2 + r.height / 2, behavior: behavior });
+        }
+      }
+
+      var actions = {
+        // Nuovo articolo: compare una riga nel foglio, viene "scritta", poi entra nel menù.
+        // Premendo di nuovo il pulsante l'articolo viene tolto, così si può rivedere la demo.
+        add: async function () {
+          if (extra) {
+            var old = extra;
+            await focusCell(old, old.tdCat, 0);
+            await sleep(400);
+            old.tr.classList.add('is-removing');
+            old.li.classList.add('is-removing');
+            await sleep(520);
+            removeItem(old);
+            extra = null;
+            announce('Menù aggiornato: ' + old.name + ' è stato tolto.');
+            await sleep(300);
+            return;
+          }
+          var it = { cat: 'Dolci', name: 'Tiramisù', price: '6,00', desc: 'Fatto in casa', avail: true, daily: false };
+          buildSheetRow(it, ITEMS.length, true);
+          it.tr.classList.add('is-adding');
+          await focusCell(it, it.tdCat, 0, '');
+          await sleep(300);
+          await typeText(it, 0, it.cat, function (s) { it.tdCat.textContent = s; });
+          await sleep(250);
+          setActive(it.thName);
+          await typeText(it, 1, it.name, function (s) { it.thName.textContent = s; });
+          await sleep(250);
+          setActive(it.tdPrice);
+          await typeText(it, 2, it.price, function (s) { it.input.value = s; });
+          await sleep(350);
+          // Da qui l'articolo fa parte del menù, come tutti gli altri
+          ITEMS.push(it);
+          buildPhoneRow(it);
+          paintRow(it, true);
+          paintSelects(it);
+          paintFeatured();
+          flash(it.tdPrice, 'is-hit');
+          if (it.newCat) it.catHead.classList.add('is-appearing');
+          extra = it;
+          announce('Menù aggiornato: aggiunto ' + it.name + ', ' + it.price + ' euro, nella categoria ' + it.cat + '.');
+          keepInView(it);
+          await sleep(900);
+        },
+        // Birra media: 5,00 <-> 5,50, scritto a "tastiera"
+        price: async function () {
+          var it = byName('Birra media');
+          var target = (it.price === '5,50') ? '5,00' : '5,50';
+          await focusCell(it, it.tdPrice, 2);
+          await sleep(450);
+          it.input.value = '';
+          setFx(it, 2, '');
+          for (var k = 1; k <= target.length; k++) {
+            it.input.value = target.slice(0, k);
+            setFx(it, 2, it.input.value);
+            await sleep(140);
+          }
+          commit(it, 'price', target, it.tdPrice);
+          it.input.value = it.price;
+          keepInView(it);
+          await sleep(900);
+        },
+        // Tagliere misto: SÌ <-> NO in "Disponibile"
+        soldout: async function () {
+          var it = byName('Tagliere misto');
+          var next = !it.avail;
+          await focusCell(it, it.tdAvail, 3);
+          await sleep(500);
+          it.selAvail.value = next ? '1' : '0';
+          commit(it, 'avail', next, it.tdAvail);
+          setFx(it, 3);
+          keepInView(it);
+          await sleep(900);
+        },
+        // Risotto allo zafferano: SÌ <-> NO in "Piatto del giorno"
+        daily: async function () {
+          var it = byName('Risotto allo zafferano');
+          var next = !it.daily;
+          await focusCell(it, it.tdDaily, 4);
+          await sleep(500);
+          if (next && !it.avail) { it.selAvail.value = '1'; commit(it, 'avail', true, it.tdAvail); }
+          it.selDaily.value = next ? '1' : '0';
+          commit(it, 'daily', next, it.tdDaily);
+          setFx(it, 4);
+          if (next) menu.scrollTo({ top: 0, behavior: behavior });
+          await sleep(900);
+        }
+      };
+
+      function setButtons(disabled) {
+        buttons.forEach(function (b) { b.disabled = disabled; });
+      }
+      async function run(name) {
+        if (busy) return;
+        busy = true;
+        setButtons(true);
+        hidePeek();
+        try { await actions[name](); }
+        finally { setActive(null); busy = false; setButtons(false); }
+        // Su telefono il menù è sotto il foglio: lo portiamo in vista per far vedere l'effetto
+        if (!wide.matches) {
+          await sleep(250);
+          phoneEl.scrollIntoView({ behavior: behavior, block: 'center' });
+        }
+      }
+      buttons.forEach(function (b) {
+        b.addEventListener('click', function () { run(b.getAttribute('data-action')); });
+      });
+    })();
+
+    /* ---------- 4. Esempi: un solo modello dati, tre temi ---------- */
+    (function () {
+      var root = document.getElementById('esempi');
+      if (!root) return;
+
+      var tablist = root.querySelector('[data-ex-tabs]');
+      var screen  = root.querySelector('[data-ex-screen]');
+      var panel   = root.querySelector('[data-ex-menu]');
+      var reduce  = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      /* Modello dati: ogni locale ha nome, stile, colori dei pallini e sezioni.
+         Il tema grafico (colori e carattere) è scelto da data-theme = id. */
+      var VENUES = [
+        {
+          id: 'lungolago', name: 'Caffè Lungolago', style: 'Bar elegante, scuro e oro',
+          tagline: 'Caffetteria e aperitivi', place: 'Lecco',
+          swatches: ['#0B0B0C', '#C9A24D', '#EFE8D8'],
+          sections: [
+            { title: 'Caffetteria', items: [
+              { name: 'Espresso',           desc: 'Miscela della casa',                price: '1,50' },
+              { name: 'Cappuccino',         desc: 'Latte fresco, schiuma vellutata',   price: '2,00' },
+              { name: 'Caffè shakerato',    desc: 'Ghiaccio e zucchero di canna',      price: '4,00' }
+            ] },
+            { title: 'Aperitivi', items: [
+              { name: 'Spritz del Lago',        desc: 'Prosecco, bitter, soda',        price: '7,00' },
+              { name: 'Negroni',                desc: 'Gin, vermut rosso, bitter',     price: '8,00' },
+              { name: 'Calice di Franciacorta', desc: 'Metodo classico',               price: '8,50' }
+            ] },
+            { title: 'Dolci', items: [
+              { name: 'Tiramisù al caffè', desc: 'Fatto in casa', price: '6,00' }
+            ] }
+          ]
+        },
+        {
+          id: 'forno', name: 'Pizzeria Il Forno', style: 'Calda, rosso mattone e crema',
+          tagline: 'Pizza cotta nel forno a legna', place: 'Valmadrera',
+          swatches: ['#F5EBDA', '#B23A24', '#3A2118'],
+          sections: [
+            { title: 'Pizze', items: [
+              { name: 'Margherita',      desc: 'Pomodoro, fior di latte, basilico',        price: '7,00' },
+              { name: 'Diavola',         desc: 'Salame piccante, mozzarella',              price: '9,00' },
+              { name: 'Quattro formaggi',desc: 'Mozzarella, gorgonzola, taleggio, grana',  price: '10,00' },
+              { name: 'Bufala',          desc: 'Pomodorini, mozzarella di bufala',         price: '11,00' },
+              { name: 'Calzone',         desc: 'Prosciutto cotto e ricotta',               price: '9,50' }
+            ] },
+            { title: 'Da bere', items: [
+              { name: 'Birra artigianale', desc: 'Bionda, 0,4 l',                price: '5,50' },
+              { name: 'Vino della casa',   desc: 'Calice, rosso o bianco',       price: '4,00' }
+            ] }
+          ]
+        },
+        {
+          id: 'barilotto', name: 'Pub Il Barilotto', style: 'Legno e verde scuro',
+          tagline: 'Birre alla spina e cucina', place: 'Calolziocorte',
+          swatches: ['#14241B', '#6B4A2E', '#EADFC8'],
+          sections: [
+            { title: 'Alla spina', items: [
+              { name: 'Bionda',              desc: 'Leggera e fresca, 0,4 l',        price: '5,00' },
+              { name: 'Rossa doppio malto',  desc: 'Note di caramello, 0,4 l',       price: '5,50' },
+              { name: 'IPA del mese',        desc: 'Luppolo in evidenza, 0,4 l',     price: '6,00' }
+            ] },
+            { title: 'Dalla cucina', items: [
+              { name: 'Hamburger del Barilotto', desc: 'Cheddar, bacon, salsa BBQ',  price: '12,00' },
+              { name: 'Panino con salsiccia',    desc: 'Cipolle caramellate',        price: '9,00' },
+              { name: 'Patatine rustiche',       desc: 'Con la buccia, salate',      price: '5,50' },
+              { name: 'Tagliere misto',          desc: 'Salumi e formaggi',          price: '14,00' }
+            ] }
+          ]
+        }
+      ];
+
+      /* ---- Tab ---- */
+      var tabs = VENUES.map(function (v) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'ex-tab';
+        b.id = 'tab-' + v.id;
+        b.setAttribute('role', 'tab');
+        b.setAttribute('aria-controls', 'ex-panel');
+        b.innerHTML =
+          '<span><span class="ex-tab-name">' + v.name + '</span>' +
+          '<span class="ex-tab-style">' + v.style + '</span></span>' +
+          '<span class="ex-swatches" aria-hidden="true">' +
+          v.swatches.map(function (c) { return '<span class="ex-swatch" style="background:' + c + '"></span>'; }).join('') +
+          '</span>';
+        tablist.appendChild(b);
+        return b;
+      });
+
+      /* ---- Disegno del menù dal modello dati ---- */
+      function renderMenu(v) {
+        var html =
+          '<header class="ex-head"><p class="ex-name">' + v.name + '</p>' +
+          '<p class="ex-tag">' + v.tagline + ' · ' + v.place + '</p></header><div class="ex-body">';
+        v.sections.forEach(function (s) {
+          html += '<h3 class="ex-sec-title">' + s.title + '</h3><ul>';
+          s.items.forEach(function (it) {
+            html +=
+              '<li class="ex-item"><span><span class="ex-item-name">' + it.name + '</span>' +
+              '<span class="ex-item-desc">' + it.desc + '</span></span>' +
+              '<span class="ex-item-price">' + it.price + ' €</span></li>';
+          });
+          html += '</ul>';
+        });
+        html += '</div>';
+        screen.setAttribute('data-theme', v.id);
+        panel.innerHTML = html;
+        panel.scrollTop = 0;
+        panel.setAttribute('aria-labelledby', 'tab-' + v.id);   // il pannello è descritto dal tab attivo
+      }
+
+      /* ---- Selezione (con dissolvenza breve, se consentita) ---- */
+      var current = -1;
+      var fadeTimer;
+      function select(i, moveFocus) {
+        if (i === current) { if (moveFocus) tabs[i].focus(); return; }
+        current = i;
+        tabs.forEach(function (b, k) {
+          b.setAttribute('aria-selected', k === i ? 'true' : 'false');
+          b.tabIndex = (k === i) ? 0 : -1;   // un solo tab nella sequenza Tab: le frecce fanno il resto
+        });
+        if (moveFocus) tabs[i].focus();
+
+        clearTimeout(fadeTimer);
+        if (reduce) { renderMenu(VENUES[i]); return; }
+        panel.classList.add('is-out');
+        fadeTimer = setTimeout(function () {
+          renderMenu(VENUES[i]);
+          panel.classList.remove('is-out');
+        }, 200);
+      }
+
+      tabs.forEach(function (b, i) {
+        b.addEventListener('click', function () { select(i, false); });
+      });
+
+      // Tastiera: frecce, Home e Fine
+      tablist.addEventListener('keydown', function (e) {
+        var k = e.key, i = current, n = tabs.length;
+        if (k === 'ArrowDown' || k === 'ArrowRight') i = (current + 1) % n;
+        else if (k === 'ArrowUp' || k === 'ArrowLeft') i = (current - 1 + n) % n;
+        else if (k === 'Home') i = 0;
+        else if (k === 'End') i = n - 1;
+        else return;
+        e.preventDefault();
+        select(i, true);
+      });
+
+      // Stato iniziale: primo locale, senza dissolvenza
+      renderMenu(VENUES[0]);
+      current = 0;
+      tabs.forEach(function (b, k) {
+        b.setAttribute('aria-selected', k === 0 ? 'true' : 'false');
+        b.tabIndex = (k === 0) ? 0 : -1;
+      });
+    })();
+
+    /* ---------- 5. Footer: logo (stesso file dell'intestazione) e anno corrente ---------- */
+    (function () {
+      var src  = document.querySelector('.site-header .brand-crop img');
+      var logo = document.querySelector('[data-footer-logo]');
+      if (src && logo) logo.src = src.src;
+
+      var year = document.querySelector('[data-year]');
+      if (year) year.textContent = new Date().getFullYear();
+    })();
+  </script>
+</body>
+</html>
